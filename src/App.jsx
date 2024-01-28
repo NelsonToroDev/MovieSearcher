@@ -1,35 +1,51 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import { Movies } from './components/Movies'
 import { useMovies } from './hooks/useMovies'
 
-function App() {
-  const { movies } = useMovies()
-  const [query, setQuery] = useState('')
+function useSearch() {
+  const [search, updateSearch] = useState('')
   const [error, setError] = useState(null)
 
-  // Value that will persist through many renderings
-  const counter = useRef(0)
-  counter.current++
-  console.log(counter)
+  useEffect(() => {
+    if (search === '') {
+      setError('Please specify a Movie to search')
+      return
+    }
 
-  // Value that will NOT persist through many renderings
-  let i = 0 // will be created and assigned to zero on each rendering
-  i++
-  console.log(i)
+    if (search.match(/^\d+$/)) {
+      setError('You cannot search movies that starts with a number')
+      return
+    }
+
+    if (search.length < 3) {
+      setError('Please specify at least three characters to search a movie')
+      return
+    }
+
+    setError(null)
+  }, [search])
+
+  return { search, updateSearch, error }
+}
+
+function App() {
+  const { movies } = useMovies()
+  const { search, updateSearch, error } = useSearch()
 
   // Uncontrolled way to get data from a form
   // It's uncontrolled because we use directly the DOM object without using React
   const handleSubmit = (event) => {
     event.preventDefault()
+
     // event.target is control receiver of the click. In this case the form
     const formData = new window.FormData(event.target)
     // let's create an Object based on formData
     // in this objects we will get all values from all controls
     const fields = Object.fromEntries(formData)
-    const { query } = fields
-    if (query === '') {
-      console.log(query)
+    const { search } = fields
+    if (search === '') {
+      console.log(search)
     }
   }
 
@@ -40,39 +56,13 @@ function App() {
   // commonly used for validations
   const handleChange = (event) => {
     // target will be the input control
-    const newQuery = event.target.value
+    const newQuery = '' + event.target.value
     // Pre validation. It will avoid updating the query state if a space was typed
-    if (newQuery === ' ') {
+    if (newQuery.startsWith(' ')) {
       return
     }
 
-    setQuery(newQuery)
-
-    if (newQuery === '') {
-      setError('Please specify a Movie to search')
-      return
-    }
-
-    if (newQuery.match(/^\d+$/)) {
-      setError('You cannot search movies that starts with a number')
-      return
-    }
-
-    if (newQuery.length < 3) {
-      setError('Please specify at least three characters to search a movie')
-      return
-    }
-
-    setError(null)
-  }
-
-  useEffect(() => {}, [query])
-
-  // Using useRef referencing a component
-  const inputRef = useRef()
-  const handleClick = () => {
-    const value = inputRef.current.value // always to current to access its last value
-    alert(value)
+    updateSearch(newQuery)
   }
 
   return (
@@ -80,24 +70,17 @@ function App() {
       <header>
         <h1>Movies Searcher</h1>
         <form onSubmit={handleSubmit}>
-          {/* Controled Way */}
           <input
+            style={{
+              border: '1px solid transparent',
+              borderColor: error ? 'red' : 'transparent'
+            }}
             onChange={handleChange}
-            value={query}
-            name='queryControlled'
+            value={search}
+            name='search'
             placeholder='Avenger, Matrix, Star Wars...'
           />
-          {/* Uncontroled way */}
-          <input name='query' placeholder='Avenger, Matrix, Star Wars...' />
-          {/* Controled Way using UseRef */}
-          <input
-            ref={inputRef}
-            name='queryUseRef'
-            placeholder='Avenger, Matrix, Star Wars...'
-          />
-          <button onClick={handleClick} type='submit'>
-            Search
-          </button>
+          <button type='submit'>Search</button>
         </form>
         {error && <p className='error'>{error}</p>}
       </header>
