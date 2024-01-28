@@ -1,7 +1,6 @@
 import '../App.css'
 
 function MoviesList ({ movies }) {
-  console.log(movies);
   return (
     <ul className='moviesList'>
       {movies.map((movie) => (

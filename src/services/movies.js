@@ -3,7 +3,7 @@ const API_KEY = '4287ad07'
 const API_URL = 'https://www.omdbapi.com/'
 
 export const searchMovies = async ({ search }) => {
-  if (search === '') return null
+  if (search === '') throw new Error('Invalid Search')
 
   try {
     const response = await fetch(`${API_URL}?apikey=${API_KEY}&s=${search}`)
@@ -19,6 +19,6 @@ export const searchMovies = async ({ search }) => {
       poster: movie.Poster
     }))
   } catch (err) {
-    throw new Error('An Error occurs get movies')
+    throw new Error('An Error occurs get movies', err)
   }
 }

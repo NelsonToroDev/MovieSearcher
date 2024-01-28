@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { searchMovies } from '../services/movies'
 
-export function useMovies({ search }) {
+export function useMovies({ search, sort }) {
   const [movies, setMovies] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -16,6 +16,7 @@ export function useMovies({ search }) {
       setLoading(true)
       setError(null)
       previousSearch.current = search
+      console.log(`fecthing '${search}'`)
       const newMovies = await searchMovies({ search })
       setMovies(newMovies)
     } catch (error) {
@@ -25,5 +26,14 @@ export function useMovies({ search }) {
     }
   }
 
-  return { movies, loading, getMovies }
+  // This method as well as others will be recreated on each rendering
+  const getSortedMovies = () => {
+    const sortedMovies = sort
+      ? [...movies].sort((a, b) => a.title.localeCompare(b.title))
+      : movies
+    console.log('getSortedMovies')
+    return sortedMovies
+  }
+
+  return { movies: getSortedMovies(), loading, getMovies }
 }

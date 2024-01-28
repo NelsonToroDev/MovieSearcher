@@ -11,6 +11,7 @@ function useSearch() {
   useEffect(() => {
     // avoid validation on first rendering
     if (isFirstInput.current) {
+      console.log('first input')
       isFirstInput.current = search === ''
       return
     }
@@ -37,8 +38,9 @@ function useSearch() {
 }
 
 function App() {
+  const [sort, setSort] = useState(false)
   const { search, updateSearch, error } = useSearch()
-  const { movies, loading, getMovies } = useMovies({ search })
+  const { movies, loading, getMovies } = useMovies({ search, sort })
 
   // Uncontrolled way to get data from a form
   // It's uncontrolled because we use directly the DOM object without using React
@@ -63,10 +65,14 @@ function App() {
     updateSearch(newQuery)
   }
 
+  const handleSort = () => {
+    setSort(!sort)
+  }
+
   return (
     <div className='page'>
       <header>
-        <h1>Movies Searcher</h1>
+        <h1>Movie Searcher</h1>
         <form onSubmit={handleSubmit}>
           <input
             style={{
@@ -76,8 +82,9 @@ function App() {
             onChange={handleChange}
             value={search}
             name='search'
-            placeholder='Avenger, Matrix, Star Wars...'
+            placeholder='Avenger, Matrix...'
           />
+          <input type='checkbox' onChange={handleSort} checked={sort} />
           <button type='submit'>Search</button>
         </form>
         {error && <p className='error'>{error}</p>}
