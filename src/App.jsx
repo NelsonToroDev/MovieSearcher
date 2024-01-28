@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './App.css'
 import { Movies } from './components/Movies'
 import { useMovies } from './hooks/useMovies'
@@ -6,8 +6,15 @@ import { useMovies } from './hooks/useMovies'
 function useSearch() {
   const [search, updateSearch] = useState('')
   const [error, setError] = useState(null)
+  const isFirstInput = useRef(true)
 
   useEffect(() => {
+    // avoid validation on first rendering
+    if (isFirstInput.current) {
+      isFirstInput.current = search === ''
+      return
+    }
+
     if (search === '') {
       setError('Please specify a Movie to search')
       return
