@@ -46,7 +46,7 @@ function App() {
   // It's uncontrolled because we use directly the DOM object without using React
   const handleSubmit = (event) => {
     event.preventDefault()
-    getMovies()
+    getMovies({ search })
   }
 
   // Controlled way to get data from a form

@@ -1,5 +1,6 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useMemo, useCallback } from 'react'
 import { searchMovies } from '../services/movies'
+import { useEffect } from 'react'
 
 export function useMovies({ search, sort }) {
   const [movies, setMovies] = useState([])
@@ -8,7 +9,9 @@ export function useMovies({ search, sort }) {
 
   const previousSearch = useRef(search)
 
-  const getMovies = async () => {
+  // This function will be recreated only one time because it has an ampy array as dependency
+  // useCall is the same as useMemo when it return a function
+  const getMovies = useCallback(async ({ search }) => {
     // Avoid performing the same search twice
     if (previousSearch.current === search) return
 
@@ -24,16 +27,24 @@ export function useMovies({ search, sort }) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
-  // This method as well as others will be recreated on each rendering
-  const getSortedMovies = () => {
-    const sortedMovies = sort
+  useEffect(() => {
+    console.log('Created a new getMovies')
+  }, [getMovies])
+
+  // memorize the result of a calculation based on some dependencies
+  // In this case we avoid to make a sort on each rendering
+  const sortedMovies = useMemo(() => {
+    console.log('useMemo sortedMovies')
+    return sort
       ? [...movies].sort((a, b) => a.title.localeCompare(b.title))
       : movies
-    console.log('getSortedMovies')
-    return sortedMovies
-  }
+  }, [sort, movies])
 
-  return { movies: getSortedMovies(), loading, getMovies }
+  useEffect(() => {
+    console.log('Created a new sortedMovies')
+  }, [sortedMovies])
+
+  return { movies: sortedMovies, loading, getMovies }
 }
