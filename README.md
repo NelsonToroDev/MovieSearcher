@@ -16,8 +16,8 @@ Create an application to search movies
 - ✅ Display an input to insert the movie name to search as well as its search button
 - ✅ List all found movies and display its title, year and image
 - ✅ The input should have some validations
-- Make a fetch of movies from the API
-- Found movies should be displayed in a responsive grid too.
+- ✅ Make a fetch of movies from the API
+- ✅ Found movies should be displayed in a responsive grid too.
 
 # Additional Requirements
 - Avoid to perform the same search twice

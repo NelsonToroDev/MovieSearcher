@@ -1,6 +1,7 @@
 import '../App.css'
 
 function MoviesList ({ movies }) {
+  console.log(movies);
   return (
     <ul className='moviesList'>
       {movies.map((movie) => (
@@ -15,7 +16,7 @@ function MoviesList ({ movies }) {
 }
 
 function NoMovies() {
-  return <p>Any movie found</p>
+  return <p>No movies found</p>
 }
 
 export function Movies({ movies }) {

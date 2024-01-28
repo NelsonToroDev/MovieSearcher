@@ -37,23 +37,14 @@ function useSearch() {
 }
 
 function App() {
-  const { movies } = useMovies()
   const { search, updateSearch, error } = useSearch()
+  const { movies, loading, getMovies } = useMovies({ search })
 
   // Uncontrolled way to get data from a form
   // It's uncontrolled because we use directly the DOM object without using React
   const handleSubmit = (event) => {
     event.preventDefault()
-
-    // event.target is control receiver of the click. In this case the form
-    const formData = new window.FormData(event.target)
-    // let's create an Object based on formData
-    // in this objects we will get all values from all controls
-    const fields = Object.fromEntries(formData)
-    const { search } = fields
-    if (search === '') {
-      console.log(search)
-    }
+    getMovies()
   }
 
   // Controlled way to get data from a form
@@ -92,7 +83,7 @@ function App() {
         {error && <p className='error'>{error}</p>}
       </header>
       <main>
-        <Movies movies={movies} />
+        {loading === true ? <p>Loading...</p> : <Movies movies={movies} />}
       </main>
     </div>
   )
