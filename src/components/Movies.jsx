@@ -4,7 +4,7 @@ function MoviesList ({ movies }) {
   return (
     <ul className='moviesList'>
       {movies.map((movie) => (
-        <li className='movie' key={movie.imdbID}>
+        <li className='movie' key={movie.id}>
           <h3>{movie.title}</h3>
           <p>{movie.year}</p>
           <img src={movie.poster} alt={movie.title} />
