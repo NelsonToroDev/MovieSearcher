@@ -24,8 +24,8 @@ Create an application to search movies
 # Additional Requirements
 
 - ✅ Avoid to perform the same search twice
-- Perform an automatic search while typing the movie name
-- Avoid searching continuously while typing the movie name (debounce)
+- ✅Perform an automatic search while typing the movie name
+- ✅Avoid searching continuously while typing the movie name (debounce)
 
 # React concepts to practice
 
