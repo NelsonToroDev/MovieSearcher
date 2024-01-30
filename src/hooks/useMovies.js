@@ -9,7 +9,7 @@ export function useMovies({ search, sort }) {
 
   const previousSearch = useRef(search)
 
-  // This function will be recreated only one time because it has an ampy array as dependency
+  // This function will be recreated only one time because it has an empty array as dependency
   // useCall is the same as useMemo when it return a function
   const getMovies = useCallback(async ({ search }) => {
     // Avoid performing the same search twice

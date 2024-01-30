@@ -56,13 +56,15 @@ function App() {
   // commonly used for validations
   const handleChange = (event) => {
     // target will be the input control
-    const newQuery = '' + event.target.value
+    const newSearch = '' + event.target.value
     // Pre validation. It will avoid updating the query state if a space was typed
-    if (newQuery.startsWith(' ')) {
+    if (newSearch.startsWith(' ')) {
       return
     }
 
-    updateSearch(newQuery)
+    updateSearch(newSearch)
+    // When typing make a request to GetMovies on each input
+    getMovies({ search: newSearch })
   }
 
   const handleSort = () => {
