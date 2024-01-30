@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import './App.css'
 import { Movies } from './components/Movies'
 import { useMovies } from './hooks/useMovies'
+import debounce from 'just-debounce-it'
+import { useCallback } from 'react'
 
 function useSearch() {
   const [search, updateSearch] = useState('')
@@ -49,6 +51,16 @@ function App() {
     getMovies({ search })
   }
 
+  // On each render we are creating a new debounce so timeout never occurs
+  // So we need to use UseCallback to avoid the recreation of debounce function
+  const debouncedGetMovies = useCallback(
+    debounce((search) => {
+      console.log(`debounce fired with ${search}`)
+      getMovies({ search })
+    }, 300),
+    []
+  )
+
   // Controlled way to get data from a form
   // It's controlled because we use React to access to the controler
   // On each change or on each typing it will fire a re-rendering
@@ -63,8 +75,9 @@ function App() {
     }
 
     updateSearch(newSearch)
+    // debounce
     // When typing make a request to GetMovies on each input
-    getMovies({ search: newSearch })
+    debouncedGetMovies(newSearch)
   }
 
   const handleSort = () => {
