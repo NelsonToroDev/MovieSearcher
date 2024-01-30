@@ -99,9 +99,12 @@ function App() {
             name='search'
             placeholder='Avenger, Matrix...'
           />
-          <input type='checkbox' onChange={handleSort} checked={sort} />
           <button type='submit'>Search</button>
         </form>
+        <label>
+          <input type='checkbox' onChange={handleSort} checked={sort} />
+          sort
+        </label>
         {error && <p className='error'>{error}</p>}
       </header>
       <main>
