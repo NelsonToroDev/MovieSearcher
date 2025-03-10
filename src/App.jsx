@@ -5,7 +5,7 @@ import { useMovies } from './hooks/useMovies'
 import debounce from 'just-debounce-it'
 import { useCallback } from 'react'
 
-function useSearch() {
+function useSearch () {
   const [search, updateSearch] = useState('')
   const [error, setError] = useState(null)
   const isFirstInput = useRef(true)
@@ -39,20 +39,23 @@ function useSearch() {
   return { search, updateSearch, error }
 }
 
-function App() {
+function App () {
   const [sort, setSort] = useState(false)
   const { search, updateSearch, error } = useSearch()
   const { movies, loading, getMovies } = useMovies({ search, sort })
 
-  // Uncontrolled way to get data from a form
+  // Uncontrolled way to get data from a form if we use just Javascript
   // It's uncontrolled because we use directly the DOM object without using React
+
+  // handle Submit
   const handleSubmit = (event) => {
     event.preventDefault()
     getMovies({ search })
   }
 
-  // On each render we are creating a new debounce so timeout never occurs
-  // So we need to use UseCallback to avoid the recreation of debounce function
+  // We can't put the debounce directly in the body of the component because 
+  // on each render we are going to create a new debounce function so timeout never occurs
+  // So we need to use UseCallback to avoid the recreation of debounce function, debaunce should be created only once
   const debouncedGetMovies = useCallback(
     debounce((search) => {
       console.log(`debounce fired with ${search}`)
